@@ -1,3 +1,6 @@
 # 获取pod、service、deployment 
 kubectl -n aps-os get pod/svc/deployment -o [wide|json|yaml]   
 
+
+
+
