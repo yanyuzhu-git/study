@@ -1,0 +1,68 @@
+# ​设置主机名
+hostnamectl set-hostname hdp01.zetyun.com
+hostnamectl set-hostname hdp02.zetyun.com
+hostnamectl set-hostname hdp03.zetyun.com
+
+# 安装扩展包repo
+yum -y install epel-release 
+
+# 安装ansible工具 
+yum -y install ansible 
+
+# 配置ansible工具 
+vi /etc/ansible/hosts 
+[node]
+172.20.50.16
+172.20.50.67
+172.20.50.254
+
+# 编辑主机hosts文件，用于主机名解析  
+vi /etc/hosts 
+172.20.50.16    hdp01.zetyun.com   hdp01
+172.20.50.67    hdp02.zetyun.com   hdp02
+172.20.50.254   hdp03.zetyun.com   hdp03 
+
+# 设置主机免密码登录   
+ssh-keygen -f ~/.ssh/id_rsa -N '' -t rsa -q -b 2048
+ssh-copy-id -i hdp01 
+scp -r ~/.ssh  hdp02:~/
+scp -r ~/.ssh  hdp03:~/
+
+
+# 批量初始化服务器
+# 关闭并禁用防火墙  
+ansible all -m shell -a "systemctl stop firewalld && systemctl disable firewalld"
+
+# 禁用 selinux 
+ansible all -m shell -a "sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config  && setenforce 0 && getenforce"
+
+# 禁用 swap 分区 
+ansible all -m shell -a "swapoff -a && sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab "
+
+# 同步主机hosts文件到其他节点
+ansible all -m copy  -a "src=/etc/hosts  dest=/etc/"
+
+# 设置时区
+ansible all -m shell -a "timedatectl set-timezone Asia/Shanghai"
+
+# 设置系统时钟同步
+ansible all -m shell -a "yum -y install chrony"
+ansible all -m shell -a "systemctl enable chronyd && systemctl start chronyd"
+
+# 配置本地 tools Repository，并同步到各节点
+vi /etc/yum.repos.d/tools.repo
+[tools]
+name=tools
+baseurl=http://172.20.50.66/tools
+enabled=1
+gpgcheck=0
+
+ansible all -m copy -a "src=/etc/yum.repos.d/tools.repo dest=/etc/yum.repos.d/"
+
+# 批量安装依赖工具 
+ansible all -m shell -a "yum -y install epel-release"
+ansible all -m shell -a "yum -y install vim wget lrzsz net-tools unzip "
+
+
+
+

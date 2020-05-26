@@ -1,0 +1,4 @@
+# 内核参数修改并同步到其他节点
+ansible all -m shell -a "echo 'vm.swappiness=0' >> /etc/sysctl.conf"
+ansible all -m shell -a "sysctl -p /etc/sysctl.conf"
+

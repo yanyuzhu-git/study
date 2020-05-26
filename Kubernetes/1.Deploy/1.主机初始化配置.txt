@@ -1,0 +1,56 @@
+# 设置主机名
+hostnamectl set-hostname master.zetyun.com
+hostnamectl set-hostname node01.zetyun.com
+hostnamectl set-hostname node02.zetyun.com
+
+# 安装扩展包 Repository
+yum -y install epel-release
+
+# 安装 ansible 工具
+yum -y install ansible
+
+# 配置 ansible 工具
+vi /etc/ansible/hosts
+[master]
+192.168.4.239
+192.168.4.249
+192.168.4.250
+
+# 配置 hosts 主机解析文件
+vi /etc/hosts
+192.168.4.239  master.zetyun.com  master 
+192.168.4.249  node01.zetyun.com  node01
+192.168.4.250  node02.zetyun.com  node02
+
+# 设置主机免密登录
+ssh-keygen -f ~/.ssh/id_rsa -N '' -t rsa -q -b 2048
+ssh-copy-id -i master
+scp -r  ~/.ssh  node01:~/
+scp -r  ~/.ssh  node02:~/
+
+# 同步主机 hosts 解析文件
+ansible all -m copy -a "src=/etc/hosts dest=/etc/"
+
+# 停止&&禁用防火墙
+ansible all -m systemd -a "name=firewalld state=stopped"
+ansible all -m systemd -a "name=firewalld enabled=no"
+
+# 禁用 selinux 
+ansible all -m selinux -a "state=disabled"
+
+# 禁用 swap 分区
+ansible all -m shell -a "swapoff -a && sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab "
+
+# 设置时区
+ansible all -m shell -a "timedatectl set-timezone Asia/Shanghai"
+
+# 安装时钟同步服务并启动
+ansible all -m package -a "name=chrony state=present"
+ansible all -m systemd -a "name=chronyd enabled=yes"
+ansible all -m systemd -a "name=chronyd state=started"
+
+# 安装依赖工具
+ansible all -m package -a "name=epel-release,wget,vim,net-tools,unzip,lrzsz state=present"
+
+
+

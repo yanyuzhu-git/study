@@ -1,0 +1,89 @@
+# 资源设置并同步到其他节点
+# 最大打开文件数限制
+vim /etc/security/limits.conf
+*   soft  nofile   200000
+*   hard  nofile   200000
+*   soft  nproc    200000
+*   hard  nproc    200000
+ansible all -m copy -a "src=/etc/security/limits.conf dest=/etc/security/"
+
+# 批量安装java 
+ansible all -m shell -a "yum -y install oracle-j2sdk1.8"
+
+# 配置java环境变量
+vim /etc/profile 
+#JAVA 
+export JAVA_HOME=/usr/java/jdk1.8.0_141-cloudera
+export CLASSPATH=.:$JAVA_HOME/lib:$JAVA_HOME/jre/lib:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$CLASSPATH
+export PATH=$JAVA_HOME/bin:$JAVA_HOME/jre/bin:$PATH
+export LD_LIBRARY_PATH=$JAVA_HOME/jre/lib/amd64:$JAVA_HOME/jre/lib/amd64/server:$LD_LIBRARY_PATH
+
+# 同步环境变量配置到其他节点
+ansible all -m copy -a "src=/etc/profile dest=/etc/"
+
+# 在第二个节点上安装 mysql 数据库
+yum -y install mysql-server
+
+# 部署mysql数据库
+# 开机启动并立即启动数据库
+systemctl enable mysqld  && systemctl start mysqld 
+
+# 初始化数据库
+# mysql_secure_installation
+Enter current password for root (enter for none):
+OK, successfully used password, moving on...
+
+Setting the root password ensures that nobody can log into the MySQL
+root user without the proper authorisation.
+
+Set root password? [Y/n] y
+New password:
+Re-enter new password:
+Password updated successfully!
+Reloading privilege tables..
+ ... Success!
+
+By default, a MySQL installation has an anonymous user, allowing anyone
+to log into MySQL without having to have a user account created for
+them.  This is intended only for testing, and to make the installation
+go a bit smoother.  You should remove them before moving into a
+production environment.
+
+Remove anonymous users? [Y/n] y
+ ... Success!
+
+Normally, root should only be allowed to connect from 'localhost'.  This
+ensures that someone cannot guess at the root password from the network.
+
+Disallow root login remotely? [Y/n] y
+ ... Success!
+
+By default, MySQL comes with a database named 'test' that anyone can
+access.  This is also intended only for testing, and should be removed
+before moving into a production environment.
+
+Remove test database and access to it? [Y/n] y
+ - Dropping test database...
+ERROR 1008 (HY000) at line 1: Can't drop database 'test'; database doesn't exist
+ ... Failed!  Not critical, keep moving...
+ - Removing privileges on test database...
+ ... Success!
+
+Reloading the privilege tables will ensure that all changes made so far
+will take effect immediately.
+
+Reload privilege tables now? [Y/n] y
+ ... Success!
+
+# 数据库创建与授权
+mysql> create database ambari default charset utf8 collate utf8_general_ci ;
+mysql> grant all privileges on ambari.* to ambari@'%' identified by "ambari" with grant option ;
+
+# 添加jdbc驱动
+ansible all -m file -a "path=/usr/share/java state=directory"
+ansible all -m copy -a "src=/root/mysql-connector-java-5.1.38-bin.jar dest=/usr/share/java"
+ansible all -m shell -a "cd /usr/share/java/ && ln -s mysql-connector-java-5.1.38-bin.jar mysql-connector-java.jar"
+
+
+
+

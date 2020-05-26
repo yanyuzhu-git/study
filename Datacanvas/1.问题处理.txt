@@ -1,0 +1,7 @@
+# 当apollo页面的namespace无法删除时候连接数据库删除最新24小时以内的修改记录
+select * from "InstanceConfig" t  WHERE t."ConfigNamespaceName"= 'aps.livy' order by t."DataChange_LastTime" desc;
+
+
+# 公共算子导入
+curl 'http://pipes-svc.aps-os-test.svc.cluster.local:8080/aps/internal/module/importPlatform' -X POST   -H "Content-Type:multipart/form-data"  -H "projectId:00000000-0000-0000-0000-000000000000" -H "tenantId:00000000-0000-0000-0000-000000000000" -H "userId:00000000-1111-0000-000a-000000000001" -F "file=@Pipeline 初始化(分布式).zip"
+

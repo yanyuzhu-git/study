@@ -1,0 +1,109 @@
+# 设置本地 Repository
+yum -y install httpd 
+systemctl enable httpd && systemctl start httpd 
+
+# Ambari: https://docs.cloudera.com/HDPDocuments/Ambari-2.6.2.2/bk_ambari-installation/content/ambari_repositories.html
+# HDP:https://docs.cloudera.com/HDPDocuments/Ambari-2.6.2.2/bk_ambari-installation/content/hdp_26_repositories.html
+
+# download the offline Packages to /var/www/html and unarchive it 
+Ambari:    http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.6.2.2/ambari-2.6.2.2-centos7.tar.gz
+HDP:       http://public-repo-1.hortonworks.com/HDP/centos7/2.x/updates/2.6.5.0/HDP-2.6.5.0-centos7-rpm.tar.gz
+HDP-UTILS: http://public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.22/repos/centos7/HDP-UTILS-1.1.0.22-centos7.tar.gz
+HDP-GPL:   http://public-repo-1.hortonworks.com/HDP-GPL/centos7/2.x/updates/2.6.5.0/HDP-GPL-2.6.5.0-centos7-gpl.tar.gz
+
+# 创建ambari Repository 文件
+vim /etc/yum.repos.d/ambari.repo
+#VERSION_NUMBER=2.6.2.2-1
+[ambari-2.6.2.2]
+name=ambari Version - ambari-2.6.2.2
+#baseurl=http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.6.2.2
+baseurl=http://172.20.50.16//ambari/centos7/2.6.2.2-1
+gpgcheck=1
+gpgkey=http://172.20.50.16//ambari/centos7/2.6.2.2-1/RPM-GPG-KEY/RPM-GPG-KEY-Jenkins
+enabled=1
+priority=1
+
+# 同步ambari Repository 文件到其他节点
+ansible all -m copy -a "src=/etc/yum.repos.d/ambari.repo dest=/etc/yum.repos.d/"
+
+# 创建HDP Repository 文件
+vim /etc/yum.repos.d/HDP.repo
+#VERSION_NUMBER=2.6.5.0-292
+[HDP-2.6.5.0]
+name=HDP Version - HDP-2.6.5.0
+#baseurl=http://public-repo-1.hortonworks.com/HDP/centos7/2.x/updates/2.6.5.0
+baseurl=http://172.20.50.16/HDP/centos7/2.6.5.0-292
+gpgcheck=1
+gpgkey=http://172.20.50.16/HDP/centos7/2.6.5.0-292/RPM-GPG-KEY/RPM-GPG-KEY/RPM-GPG-KEY-Jenkins
+enabled=1
+priority=1
+
+[HDP-UTILS-1.1.0.22]
+name=HDP-UTILS Version - HDP-UTILS-1.1.0.22
+#baseurl=http://public-repo-1.hortonworks.com/HDP-UTILS-1.1.0.22/repos/centos7
+baseurl=http://172.20.50.16/HDP-UTILS/centos7/1.1.0.22
+gpgcheck=1
+gpgkey=http://172.20.50.16/HDP-UTILS/centos7/1.1.0.22/RPM-GPG-KEY/RPM-GPG-KEY-Jenkins
+enabled=1
+priority=1
+
+[HDP-GPL-2.6.5.0]
+name=HDP-GPL Version - HDP-GPL-2.6.5.0
+#baseurl=http://public-repo-1.hortonworks.com/HDP-GPL/centos7/2.x/updates/2.6.5.0
+baseurl=http://172.20.50.16/HDP-GPL/centos7/2.6.5.0-292
+gpgcheck=1
+gpgkey=http://172.20.50.16/HDP-GPL/centos7/2.6.5.0-292/RPM-GPG-KEY/RPM-GPG-KEY-Jenkins
+enabled=1
+priority=1
+
+
+# 安装ambari
+yum -y install ambari-server 
+
+# 初始化ambari server 
+# 初始化过程中通常选择默认选择，除非数据库不是默认的pg数据库
+ambari-server setup -v -j $JAVA_HOME
+
+# 驱动
+ambari-server setup --jdbc-db=mysql --jdbc-driver=/usr/share/java/mysql-connector-java-5.1.38-bin.jar
+
+Using python  /usr/bin/python
+Setup ambari-server
+Copying /usr/share/java/mysql-connector-java-5.1.38-bin.jar to /var/lib/ambari-server/resources
+If you are updating existing jdbc driver jar for mysql with mysql-connector-java-5.1.38-bin.jar. Please remove the old driver jar, from all hosts. Restarting services that need the driver, will automatically copy the new jar to the hosts.
+JDBC driver was successfully initialized.
+Ambari Server 'setup' completed successfully.
+
+[root@hdp01 ~]# mysql -h hdp02.zetyun.com -u ambari -p
+Enter password:
+mysql> use ambari
+Database changed
+mysql> SOURCE /var/lib/ambari-server/resources/Ambari-DDL-MySQL-CREATE.sql
+mysql> show tables ;
++-------------------------------+
+| Tables_in_ambari              |
++-------------------------------+
+| ClusterHostMapping            |
+| QRTZ_BLOB_TRIGGERS            |
+| QRTZ_CALENDARS                |
+
+# 设置server 开机启动 并 启动
+chkconfig ambari-server on  &&  systemctl start ambari-server
+
+# 批量安装ambari-agent
+ansible all -m shell -a "yum -y install ambari-agent"
+
+# 设置ambari-agent
+vim /etc/ambari-agent/conf/ambari-agent.ini
+[server]
+hostname=hdp01.zetyun.com
+[security]
+force_https_protocol=PROTOCOL_TLSv1_2
+
+# 同步ambari-agent配置到其他节点
+ansible all -m copy -a "src=/etc/ambari-agent/conf/ambari-agent.ini dest=/etc/ambari-agent/conf/"
+
+# 批量设置ambari-agent 开机启动 并启动 
+ ansible all -m shell -a "chkconfig ambari-agent on "
+ ansible all -m shell -a "systemctl start  ambari-agent "
+
