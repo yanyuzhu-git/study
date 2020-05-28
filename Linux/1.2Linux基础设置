@@ -1,0 +1,3 @@
+whatis rm\man rm  --> 查看命令的意思
+mandb             --> 创建文件查询数据库
+man bash |wc -l   --> 汇总查询出来内容的数量

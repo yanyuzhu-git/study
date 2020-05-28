@@ -2,9 +2,65 @@ xshell的快捷键：
 Ctrl + a —->光标移动到行首
 Ctrl + e —->光标移动到行尾
 Ctrl + c —->终止当前程序
+Ctrl + d —->退出当前界面
 Ctrl + u —->剪切光标以前的字符
 Ctrl + k —->剪切光标以后的字符
 Ctrl + y —->复制u/k的内容
 Ctrl + r —->查找最近用过的命令
 tab —->命令或路径补全
 lsblk  查看磁盘信息
+hostname -I 查看本机所有的ip地址
+tty-->/dev/pts/0      -->查看当前终端类型
+Ctrl+Alt+F1-6          -->进行切换终端的窗口
+bash     centos默认的shell
+zsh      macos 默认的shell
+echo ${SHELL} --> 查看当前使用的shell版本
+lscpu -->  查看cpu信息
+lsmem -->  查看内存信息
+free-m --> 查看内存概要信息-m是以兆为单位-h是以G为单位
+cat /etc/redhat-release  -->查看本系统的版本号
+uname -r --> 查看内核版本
+hostname centos8.1-k8s.yuzhu.com -->临时设置主机名
+hostnamectl sethostname centos8.1-k8s.yuzhu.com --> 永久设置主机名
+永久定义提示符 --> echo 'PS1="\[\e[1;32m\][\e[0m\]\t \[\e[1;33m\]\u\[\e[36m\]@\h\[\e[1;31m\] \w\[\e[1;32m\]]\[\e[0m\]\\$"' > /etc/profile.d/env.sh
+type COMMAND  --> 区别内部命令还是外部命令
+示例：type -a echo
+    echo is a shell builtin
+    echo is /usr/bin/echo
+    表示echo既是内部命令也是外部命令
+enable 控制内部命令
+enable cmd    --> 允启用内部命令cmd
+enable -n cmd --> 禁用内部命令cmd
+enable -n     --> 列出禁用的列表
+which command --> 查看外部命令的文件路径
+hash -l       --> 显示缓存的列表
+hash -d name  --> 删除指定的缓存 
+hash -r       --> 清除所有缓存
+alias name=“valuse”  --> 临时定义别名
+echo "alias free='free -h'" >> /etc/bashc  永久对所有用户定义别名
+unalias free  --> 取消对别名的设置
+unalias -a    --> 取消对所有别名的定义
+\aliasname    --> 指定使用该名称的原始定义
+id -u username --> 查看指定用户信息
+data          --> 显示和设置系统时间
+clock         --> 显示和设置硬件时间
+clock -s      --> 以硬件时间为准调整系统时间
+clock -w      --> 以系统时间为准调整硬件时间
+cal -y -w -m  --> 查看日历 年，周，月
+bc            --> 计算器  obser=2 设定转换2进制
+who           --> 查看当前登录的用户
+who am i      --> 查看当前登陆的用户是谁
+w             --> 查看当前登录的所有用户和正在做什么
+screen -S name -> 创建名称为name的虚拟窗口
+screen -r name -> 重新进入指定名称的虚拟窗口
+Ctrl +a +d    --> 临时离开所在的虚拟窗口
+在虚拟窗口内输入exit   --> 表示结束该虚拟窗口
+screen -ls    --> 列出当前所有的session 
+echo -e "\a"  --> 发出声音 ，常配合任务完成后使用，来提醒任务完成
+echo $LANG    --> 查看当前配置的语言和字符集
+touch $(date +%F).log/touch $(date +%F).log  创建基于系统时间的文件
+echo {a..z}   --> 输出连续的内容
+echo {00..90..2}--> 间隔为2，显示区间的数
+history -c    --> 清空历史记录
+history -a    --> 追加历史记录到文件中
+history n     --> 显示最近的n条记录
