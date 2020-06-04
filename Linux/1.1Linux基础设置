@@ -28,6 +28,7 @@ hash -d name  --> 删除指定的缓存
 hash -r       --> 清除所有缓存
 alias name=“valuse”  --> 临时定义别名
 echo "alias free='free -h'" >> /etc/bashc  永久对所有用户定义别名
+echo "alias rm='dir=/date/backup `data +%F%T`;mkdir $dir;mv -t $dir'" >> /etc/bashc  --> 定义rm为备份数据到指定目录。
 unalias free  --> 取消对别名的设置
 unalias -a    --> 取消对所有别名的定义
 \aliasname    --> 指定使用该名称的原始定义

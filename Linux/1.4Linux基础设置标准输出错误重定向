@@ -1,0 +1,10 @@
+ls > /data/file1.txt 将命令得出的结果重定向显示到指定文件中
+cat /dev/null > filename 清空文件内容
+set -C                 禁止将内容进行文件覆盖
+set +C                 设置允许覆盖
+ls >| /data/file2.txt  强制覆盖文件内容
+ll >> /data/file2      追加信息到指定文件内
+ls /xxx 2> /data/file3 将错误信息追加到文件内
+ls /data /xxx &> fie4  将错误信息和标准输出信息追加到指定文件
+ls /data /xxx 1> file5 2>&1  标准输出信息和错误信息追加到指定文件
+（ls;hostname) 1>> /data/file.log  将多个指令信息输出到指定文件
