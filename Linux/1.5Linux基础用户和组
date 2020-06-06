@@ -1,0 +1,11 @@
+0-999 系统用户 1000+普通用户
+安全上下是指，以进程发起者的身份运行，进程能对文件访问和运行，取决于运行进程的运行者身份
+useradd name  --> 创建用户
+userdel name  --> 删除用户
+usermod name  --> 修改用户
+userdel -r name --> 删除用户和用户的文件
+groupadd name  --> 创建组
+groupmod name  --> 修改组
+groupdell name --> 删除组
+groupname -g name -l 查看该组的用户
+getent passwd|shadow|group|gshadow name 查看文件内容
