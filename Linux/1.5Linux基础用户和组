@@ -8,4 +8,23 @@ groupadd name  --> 创建组
 groupmod name  --> 修改组
 groupdell name --> 删除组
 groupname -g name -l 查看该组的用户
+groups groupname  查看主成员
 getent passwd|shadow|group|gshadow name 查看文件内容
+su             --> 切换用户身份，但是环境不变
+su -           --> 切换用户身份和环境
+su - root -c "getent passwd"  执行一次命令后再切回本用户
+passwd [option] name  给用户设置密码
+       -d      --> 删除指定用户
+       -l      --> 锁定指定用户
+       -u      --> 解锁指定用户
+       -e      --> 强制用户下次登陆修改密码
+       -f      --> 强制操作
+       -n      --> 最短使用期限
+       -x      --> 最大使用期限
+       -w      --> 提前多少天警告
+       -i      --> 非活动期限
+newgrp root    --> 临时添加主组
+gpasswd -a username groupname 添加用户到组里面
+gpasswd -d username groupname 删除组成员
+
+

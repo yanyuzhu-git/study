@@ -8,3 +8,54 @@ ls /xxx 2> /data/file3 将错误信息追加到文件内
 ls /data /xxx &> fie4  将错误信息和标准输出信息追加到指定文件
 ls /data /xxx 1> file5 2>&1  标准输出信息和错误信息追加到指定文件
 （ls;hostname) 1>> /data/file.log  将多个指令信息输出到指定文件
+cat < file.txt         标准输入重定向
+cat << file.txt         多行重定向输入
+ #cat <<EOF
+ > yanyuzhu
+ > liubeijing
+ > wanchunyan
+ > yanpeichen
+ > EOF
+cat > file.txt          单行重定向输入
+tr 123456 qwer          替换参数
+1234567
+qw3err7         
+tr -t 12456 qwer        将第一个字符集替换为第二个字符集
+12345678
+qw3er678
+tr -d 123         删除所有包含字符集的内容
+123456
+456
+tr -s abc               把连续重复的字符只显示一次
+aabbcc
+abc
+tr -c qwe 123          -c显示点一个字符的补集
+qwerty
+qwe3333
+tr 'a-z'  'A-Z'
+asfsf
+ASFSF
+fw
+FW
+df|tr -s ' ' :              使用管道是两个命令结合使用
+Filesystem:1K-blocks:Used:Available:Use%:Mounted:on
+devtmpfs:908356:0:908356:0%:/dev
+tmpfs:924780:0:924780:0%:/dev/shm
+tmpfs:924780:8864:915916:1%:/run
+tmpfs:924780:0:924780:0%:/sys/fs/cgroup
+/dev/sda2:52403200:1747000:50656200:4%:/
+/dev/sda1:999320:130916:799592:15%:/boot
+/dev/sda5:96928:6160:90768:7%:/data
+tmpfs:184956:0:184956:0%:/run/user/0
+ls /data/ /xxx |& tr 'a-z' 'A-Z'   将错误和正确的全部进行重定向转换
+LS: CANNOT ACCESS '/XX': NO SUCH FILE OR DIRECTORY
+/DATA/:
+09.TXT
+2.FI
+90.TXT
+9.TXT
+A.TXT
+B.TXT
+echo 123456 | passwd --stdin root > /dev/nul 使用标准输出修改用户密码
+echo hallo | tee tee.log        使用tee命令同时实现标准输出到文件和显示到屏幕
+hallo
