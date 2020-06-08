@@ -1,15 +1,30 @@
 0-999 系统用户 1000+普通用户
 安全上下是指，以进程发起者的身份运行，进程能对文件访问和运行，取决于运行进程的运行者身份
 useradd name  --> 创建用户
+        -o    -->  配合-u使用，不检查uid的唯一性
+        -u    --> UID
+        -g    --> 指定用户的所属组
+        -c    --> 用户的注释信息
+        -d    --> 指定用户的家目录
+        -s    --> 指定用户的shell类型
+        -G    -->  指定用户的附加组
+        -N    -->  不创建私有组，使用user组做主组
+        -r    -->  创建系统用户
+        -m    -->  为系统用户创建家目录
+        -M    -->  为非系统用户不创建家目录
+useradd -r -u 48 -g apache -s /sbin/nologin -d /var/www -c "Apache" apache 创建apache用户
 userdel name  --> 删除用户
 usermod name  --> 修改用户
 userdel -r name --> 删除用户和用户的文件
 groupadd name  --> 创建组
 groupmod name  --> 修改组
 groupdell name --> 删除组
+groupmems -a user -g groupname  添加组成员
+gpasswd -a user groupname       添加组成员
 groupname -g name -l 查看该组的用户
-groups groupname  查看主成员
+groups groupname   查看主成员
 getent passwd|shadow|group|gshadow name 查看文件内容
+groupadd -g 48 -r apache 添加组
 su             --> 切换用户身份，但是环境不变
 su -           --> 切换用户身份和环境
 su - root -c "getent passwd"  执行一次命令后再切回本用户

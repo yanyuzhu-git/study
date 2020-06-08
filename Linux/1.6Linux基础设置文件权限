@@ -1,0 +1,48 @@
+chown -R username:groupname filename --> 递归修改文件的所属权限
+chown --reference=file1 file2     --> 参考文件file1的属性，修改file2的属性
+chmod u     g   o   -  +  = r  w  x filename --> 修改文件的权限
+      用户，组，其他         读 写 执行
+文件能不能被删除取决于用户对文件所在目录的权限，如果有写权限，即可被删除
+如果目录没有读的权限，不能查看目录的文件列表，但是如果知道目录里面的文件，依然可以对文件进行操作。
+目录权限的读与执行并行使用
+chmod -R a+X /data/      递归授权给data目录和子目录有执行权限
+目录的权限
+        r   --> 可以使用ls查看目录内的文件列表
+        w   --> 可以在目录内创建和删除文件和子目录 
+        x   --> 可以使用ls-l查看文件的元素，也可以进入子目录
+        X   --> 只给目录执行的权限
+chomod 777 filename     以八进制形式给文件修改权限
+u 4=r 2=w 1=x 777 421 655 644     
+g 4=r 2=w 1=x 777 421 655 644    
+o 4=r 2=w 1=x 777 421 655 644     
+管理组用户默认umask=022
+普通用户组默认umask=002
+umask 044 >> .bashrc  --> 永久配置用户文件的默认权限 
+新建文件的默认权限=666-umask  如遇奇数自增一
+新建文件夹的默认权限=777-umask
+suid  二进制可执行程序继承文件所有者的权限
+chmod u+s filename 
+sgid  二进制可执行程序继承文件所属组的权限
+chmod g+s filename
+chmod g+s dir   --> 定义目录内创建文件继承父目录的所属组
+static位
+chmod o+t dir   --> 用于目录权限，定义目录内文件只有所有者才能删除
+chmod 4644 filename      --> 定义文件的附加权限相当于u+s  
+      2644 filename      --> 定义文件的附加权限相当于g+s
+      1644 filename      --> 定义文件的附加权限相当于o+t
+chattr +i filename       --> 添加root也不能修改和删除的文件
+chattr -i filename       --> 去掉附加的特殊权限
+chattr +a filename       --> 添加root只能修改不能删除的文件
+lsattr                   --> 查看文件的特殊属性
+----i-------------- ./tee.log
+acl权限生效升序：
+   所有者-> 自定义用户-> 所属组-> 自定义用户组-> 其它
+setfacl -m u:user r filename  --> 给文件设置指定用户读的权限
+getfacl file|dir         --> 查看文件或者是目录的指定权限
+setfacl -b file          --> 清除文件的acl权限
+setfacl -m g:groupname rw filename  给文件设置指定用户组读写的权限
+备份acl
+   getfacl -R dir > acl.txt  --> 指定目录的acl权限设置备份到acl.txt文件内
+   setfacl -R --set-facl=acl.txt /dir  --> 还原acl权限到指定文件
+   setfacl -R -b /bir        --> 清空指定文件的acl权限
+   
