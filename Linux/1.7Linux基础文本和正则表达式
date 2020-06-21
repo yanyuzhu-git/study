@@ -1,0 +1,62 @@
+ vim 编辑文本
+        i   -->  光标处添加
+        I   -->  光标所在的行首添加
+        a   -->  光标后添加
+        A   -->  光标所在的行末添加
+        o   -->  光标的下一行添加
+        O   -->  光标的上一行添加
+        ！command  显示执行命令的结果，按回车键回到文本编辑状态
+        r!command  将执行的命令结果输出到编辑的文本中
+       ZZ          保存退出
+       ZQ          不保存退出
+       w           跳到下个单词的词首
+       e           跳到当前或者是下个单词的词尾
+       b           跳到当前或者是前个单词的词首
+vim .vimrc
+set cursorline     设置编辑时显示鼠标所在的行线
+more cat filename  查看文件内容，一页显示不完，回车键下翻页
+less cat filename  查看文件内容，一页显示不完，可以上下翻页，q退出显示的文件
+head option filename 默认查看文件的前十行
+     -n+数字        显示多少行 
+     -c+数字        显示多少字符
+cat /dev/random | tr -dc '[:alnum:]' | head -c 10  随机提取10个包含数字和数字的字符
+tail -n 3 filename 查看文件的最后3行内容
+tail -f filename   跟踪文件最后几行内容的变化，跟踪的是文件描述符，当文件删除后，无法继续跟踪。
+tail -F filename   跟踪文件最后几行内容的变化，跟踪的是文件名称，删除时可以跟踪到
+cut           -->  提取文件指定列的内容
+cut -d+分隔符，默认tab
+    -f+行的表示#:例如3
+              #，#：例如3，8，意思是3和8
+              #-#：例如3-8，意思是3到8
+    -c 按字符切割
+    --output-delimiter=指定字符    --> 设置指定字符替换列的分隔符
+    cut -d: -f1,3 -4,7 /etc/passwd
+    cut -d: --output-delimiter=":::" -f1,3-4,7 /etc/passwd
+paste 合并多个文件同行号的列到一行
+paste -d 指定分隔符
+      -s 所有行合成一行显示
+wc -l              统计内容的行数
+wc -L              显示最长行的长度
+wc -w              只统计单词
+wc -c              只统计数字
+wc -m              只统计数字符
+sort -r            执行反方向整理
+     -R            随机排序
+     -k            按照指定的列整理排序
+     -t            使用指定的字符作为分隔符
+     -u            删除输出重复的行
+     -f            忽略字符串中字符大小写
+     -n            按数字大小排序
+uniq -c            显示每行重复出现的次数
+     -d            仅显示重复的行
+     -u            进显示不重复的行
+cut -d" " -f1 alpha.log | tr -s " " | sort | uniq -c | sort -nr | head -3  压缩文件的重复空格，并查看文件内重复出现次数最多的前三行
+cat alpha.log num.log |sort |uniq -d                                       查看两个文件内重复的行
+cat alpha.log num.log |sort |uniq -u                                       查看两个文件内不重复的行
+diff file1 file2   查看两个文件的不同之处
+diff -u file1 file2 > file.path   详细显示出两个文件不同的地方结果输出到指定文件
+path -d file1 file.path           根据两个不同文件的输出结果恢复其中的一个文件
+df | tr -s " " % |cut -d% -f5 |sort -nr |head -n1    查看磁盘使用空间最大的分区
+cut -d":" -f1,3,7 /etc/passwd |sort -t":" -k2 -nr | head -1   查看uid最大的用户
+stat -c %a /tmp                                      查看tmp目录的权限 
+cut -d" " -f1 accese.log |sort |uniq -c | sort -nr | head -1    查看连接数最多的地址

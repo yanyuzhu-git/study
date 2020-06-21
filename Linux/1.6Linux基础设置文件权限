@@ -37,7 +37,7 @@ lsattr                   --> 查看文件的特殊属性
 ----i-------------- ./tee.log
 acl权限生效升序：
    所有者-> 自定义用户-> 所属组-> 自定义用户组-> 其它
-setfacl -m u:user r filename  --> 给文件设置指定用户读的权限
+setfacl -m u:user:r filename  --> 给文件设置指定用户读的权限
 getfacl file|dir         --> 查看文件或者是目录的指定权限
 setfacl -b file          --> 清除文件的acl权限
 setfacl -m g:groupname rw filename  给文件设置指定用户组读写的权限
@@ -45,4 +45,4 @@ setfacl -m g:groupname rw filename  给文件设置指定用户组读写的权�
    getfacl -R dir > acl.txt  --> 指定目录的acl权限设置备份到acl.txt文件内
    setfacl -R --set-facl=acl.txt /dir  --> 还原acl权限到指定文件
    setfacl -R -b /bir        --> 清空指定文件的acl权限
-   
+  
