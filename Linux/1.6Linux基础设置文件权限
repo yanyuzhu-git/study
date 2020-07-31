@@ -45,4 +45,3 @@ setfacl -m g:groupname rw filename  给文件设置指定用户组读写的权�
    getfacl -R dir > acl.txt  --> 指定目录的acl权限设置备份到acl.txt文件内
    setfacl -R --set-facl=acl.txt /dir  --> 还原acl权限到指定文件
    setfacl -R -b /bir        --> 清空指定文件的acl权限
-  

@@ -60,7 +60,4 @@ df | tr -s " " % |cut -d% -f5 |sort -nr |head -n1    查看磁盘使用空间最
 cut -d":" -f1,3,7 /etc/passwd |sort -t":" -k2 -nr | head -1   查看uid最大的用户
 stat -c %a /tmp                                      查看tmp目录的权限 
 cut -d" " -f1 accese.log |sort |uniq -c | sort -nr | head -1    查看连接数最多的地址
-正则表达式
-脚本编辑器
-VMware vSphere 6 Enterprise Plus
-0A65P-00HD0-3Z5M1-M097M-22P7H
+vim scp://cirdan@192.168.225.22//home/cirdan/Documents/info.txt   --> 编辑远程系统文件，绝对路径前有双斜线。
