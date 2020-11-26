@@ -1,0 +1,6 @@
+apt download wget    --> 下载deb包
+dpkg-deb -R wget_1.20.1-1.1_amd64.deb wget    -->解压deb包到指定的wget文件夹内
+dpkg -b 程序路径 /包存放路径/packagename.deb    -->  打包命令
+dpkg -i packagename.deb     --> 安装deb包
+dpkg --purge packagename.deb     --> 卸载deb包
+apt-get install packagename.deb  --> 安装软件源里面的软件包
