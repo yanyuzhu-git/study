@@ -87,5 +87,4 @@ rm /filename.link/  --> 删除软连接本身和里面的数据。
 软链接是快捷方式，硬链接是实际的文件，文件内容与源文件做同步
 stat /filename      --> 查看文件的状态，包括状态，权限
 file /filename      --> 查看文件的类型
-setfacl 
-lsfacl
+
