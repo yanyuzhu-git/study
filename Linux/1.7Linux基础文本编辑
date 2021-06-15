@@ -55,6 +55,7 @@ cat alpha.log num.log |sort |uniq -d                                       查�
 cat alpha.log num.log |sort |uniq -u                                       查看两个文件内不重复的行
 diff file1 file2   查看两个文件的不同之处
 diff -u file1 file2 > file.path   详细显示出两个文件不同的地方结果输出到指定文件
+diff -r -p dir1/ dir2    -->      查看两个目录及子目录不同之处。
 path -d file1 file.path           根据两个不同文件的输出结果恢复其中的一个文件
 df | tr -s " " % |cut -d% -f5 |sort -nr |head -n1    查看磁盘使用空间最大的分区
 cut -d":" -f1,3,7 /etc/passwd |sort -t":" -k2 -nr | head -1   查看uid最大的用户
