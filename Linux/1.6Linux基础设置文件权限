@@ -44,5 +44,8 @@ setfacl -m g:groupname rw filename  给文件设置指定用户组读写的权�
 备份acl
    getfacl -R dir > acl.txt  --> 指定目录的acl权限设置备份到acl.txt文件内
    setfacl -R --set-facl=acl.txt /dir  --> 还原acl权限到指定文件
-   setfacl -R -b /bir        --> 清空指定文件的acl权限
-  
+   setfacl -R -b /dir        --> 清空指定文件的acl权限
+writ 用户名
+   发送信息的内容
+   ctrl+d 退出回话            --> 发送消息给指定用户
+wall 消息内容                --> 发送消息给所有用户   

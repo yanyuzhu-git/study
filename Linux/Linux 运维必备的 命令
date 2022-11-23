@@ -1,0 +1,32 @@
+find -type f -size 0 -exec rm -rf {} \;   -->  删除空文件
+ps -e -o "%C : %p : %z : %a"|sort -k5 -nr -->  查看进程，按内存从大到小排序
+ps -e -o "%C : %p : %z : %a"|sort -nr     --> 查看进程，按cpu利用率从大到小
+grep -r -a jpg /data/cache/* | strings | grep "http:" | awk -F'http:' '{print "http:"$2;}'  --> 查看指定文件cache里面的url
+netstat -n | awk '/^tcp/ {++S[$NF]} END {for(a in S) print a, S[a]}'   --> 查看http的并发请求和tcp连接状态
+sed -i '/Root/s/no/yes/' /etc/ssh/sshd_config   --> 查找这个文件存在Root的行，将存在Root的行里面的 no 替换成 yes
+ps aux |grep mysql |grep -v grep  |awk '{print $2}' |xargs kill -9
+ killall -TERM mysqld
+ kill -9 `cat /usr/local/apache2/logs/httpd.pid`   --> 杀掉查出来的进程。
+ifconfig eth0 |grep "inet addr:" |awk '{print $2}'| cut -c 6-  
+ ifconfig | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}' 
+ ifconfig ens33 |grep "inet " |awk '{print $2}'      --> 获取ip地址
+free -h |grep "Mem" | awk '{print $2}'               --> 查看内存大小 
+find / -name *.jpg -exec wc -c {} \;|awk '{print $1}'|awk '{a+=$1}END{print a}'  --> 查看所有jpg文件的总大小
+ load average: 1.46, 0.40, 0.14                  --> 查看cpu负载情况
+ df -h                                           --> 查看磁盘空间
+vmstat 1 5                                       --> 检查swap空间波动情况
+
+du -cks * | sort -rn | head -n 10                --> 查看当前挂载点占用空间前10的文件
+netstat -i                                       --> 查看网络错误
+
+ps aux | wc -l                                   --> 查看进程总数
+top -id 1                                        --> 观察是否有异常进程出现。
+who | wc -l                                      --> 查看有多少用户
+date                                             --> 查看日期
+lsof | wc -l                                     --> 打开文件数
+chkconfig --list | awk '{if ($5=="3:on") print $1}'   --> 查看自启服务
+
+lsof -i :80|grep -v “ID”|awk ‘{print “kill -9”,$2}’|sh   --> 杀掉相关端口进程
+
+tcpdump -c 10000 -i eth0 -n dst port 80 > /root/pkts   --> 分析制定端口数据
+less pkts | awk {'printf $3"\n"'} | cut -d. -f 1-4 | sort | uniq -c | awk {'printf $1" "$2"\n"'} | sort -n -t\  +0   --> 检查重复的ip数量，从少到多

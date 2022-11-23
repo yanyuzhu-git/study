@@ -55,3 +55,15 @@ echo {00..90..2}--> 间隔为2，显示区间的数
 history -c    --> 清空历史记录
 history -a    --> 追加历史记录到文件中
 history n     --> 显示最近的n条记录
+nmtp ip地址   --> 查看指定主机开放的端口
+查找文件   
+ which 
+ whereis 
+ lcate
+ find / -name filename
+        -type 
+        -size 
+        -user
+        -group
+ find / -name passwd -exec cp {} /opt/  \;     --> 把查找出来的文件拷贝到opt目录内
+
